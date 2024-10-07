@@ -1,153 +1,45 @@
-Проектирование базы данных "Туризм" требует создания нескольких таблиц, каждая из которых будет хранить различные аспекты, связанные с туристическими услугами. Давайте создадим структуру базы данных, состоящую из следующих таблиц:
-
-Таблица "Клиенты" (Customers)
-
-Таблица "Туры" (Tours)
-
-Таблица "Услуги" (Services)
-
-Таблица "Заказы" (Orders)
-
-Таблица "Специалисты" (Agents)
-
-Определения таблиц
-
-1. Таблица "Клиенты" (Customers)
-
-CustomerID (INT, PRIMARY KEY) - уникальный идентификатор клиента
-
-FullName (VARCHAR(100)) - полное имя клиента
-
-Email (VARCHAR(100)) - электронная почта клиента
-
-Phone (VARCHAR(15)) - телефон клиента
-
-2. Таблица "Туры" (Tours)
-
-TourID (INT, PRIMARY KEY) - уникальный идентификатор тура
-
-TourName (VARCHAR(100)) - название тура
-
-Price (DECIMAL(10, 2)) - цена тура
-
-Duration (INT) - длительность тура в днях
-
-3. Таблица "Услуги" (Services)
-
-ServiceID (INT, PRIMARY KEY) - уникальный идентификатор услуги
-
-ServiceName (VARCHAR(100)) - название услуги
-
-Cost (DECIMAL(10, 2)) - стоимость услуги
-
-4. Таблица "Заказы" (Orders)
-
-OrderID (INT, PRIMARY KEY) - уникальный идентификатор заказа
-
-CustomerID (INT, FOREIGN KEY) - идентификатор клиента (ссылка на Customers)
-
-TourID (INT, FOREIGN KEY) - идентификатор тура (ссылка на Tours)
-
-OrderDate (DATE) - дата оформления заказа
-
-5. Таблица "Специалисты" (Agents)
-
-AgentID (INT, PRIMARY KEY) - уникальный идентификатор агента
-
-AgentName (VARCHAR(100)) - имя специалиста
-
-Phone (VARCHAR(15)) - телефон специалиста
-
-Связи между таблицами
-
-Таблица Orders ссылается на таблицы Customers и Tours через внешние ключи: CustomerID и TourID.
-
-SQL-скрипт для создания базы данных
-
-CREATE DATABASE Tourism;
-
-USE Tourism;
-
--- Таблица клиентов
-
-CREATE TABLE Customers (
-
-    CustomerID INT AUTO_INCREMENT PRIMARY KEY,
-
-    FullName VARCHAR(100) NOT NULL,
-
-    Email VARCHAR(100) UNIQUE NOT NULL,
-
-    Phone VARCHAR(15)
-
+Пример скрипта SQL для создания таблиц:
+sql
+-- Создание таблицы Clients
+CREATE TABLE Clients (
+  ID INT PRIMARY KEY AUTO_INCREMENT,
+  Имя VARCHAR(255),
+  Фамилия VARCHAR(255),
+  Email VARCHAR(255),
+  Телефон VARCHAR(20)
 );
-
--- Таблица туров
-
+-- Создание таблицы Countries
+CREATE TABLE Countries (
+  ID INT PRIMARY KEY AUTO_INCREMENT,
+  Название VARCHAR(255)
+);
+-- Создание таблицы Cities
+CREATE TABLE Cities (
+  ID INT PRIMARY KEY AUTO_INCREMENT,
+  Название VARCHAR(255),
+  СтранаID INT,
+  FOREIGN KEY (СтранаID) REFERENCES Countries(ID)
+);
+-- Создание таблицы Tours
 CREATE TABLE Tours (
-
-    TourID INT AUTO_INCREMENT PRIMARY KEY,
-
-    TourName VARCHAR(100) NOT NULL,
-
-    Price DECIMAL(10, 2) NOT NULL,
-
-    Duration INT NOT NULL
-
+  ID INT PRIMARY KEY AUTO_INCREMENT,
+  Название VARCHAR(255),
+  Описание TEXT,
+  СтранаID INT,
+  ГородID INT,
+  Цена DECIMAL(10,2),
+  Дата_начала DATE,
+  Дата_окончания DATE,
+  FOREIGN KEY (СтранаID) REFERENCES Countries(ID),
+  FOREIGN KEY (ГородID) REFERENCES Cities(ID)
 );
-
--- Таблица услуг
-
-CREATE TABLE Services (
-
-    ServiceID INT AUTO_INCREMENT PRIMARY KEY,
-
-    ServiceName VARCHAR(100) NOT NULL,
-
-    Cost DECIMAL(10, 2) NOT NULL
-
-);
-
--- Таблица заказов
-
+-- Создание таблицы Orders
 CREATE TABLE Orders (
-
-    OrderID INT AUTO_INCREMENT PRIMARY KEY,
-
-    CustomerID INT,
-
-    TourID INT,
-
-    OrderDate DATE NOT NULL,
-
-    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
-
-    FOREIGN KEY (TourID) REFERENCES Tours(TourID)
-
+  ID INT PRIMARY KEY AUTO_INCREMENT,
+  КлиентID INT,
+  ТурID INT,
+  Дата_заказа DATETIME,
+  Статус VARCHAR(255),
+  FOREIGN KEY (КлиентID) REFERENCES Clients(ID),
+  FOREIGN KEY (ТурID) REFERENCES Tours(ID)
 );
-
--- Таблица специалистов
-
-CREATE TABLE Agents (
-
-    AgentID INT AUTO_INCREMENT PRIMARY KEY,
-
-    AgentName VARCHAR(100) NOT NULL,
-
-    Phone VARCHAR(15)
-
-);
-
-Описание структуры
-
-Клиенты - содержит информацию о клиентах, которые могут заказывать туры.
-
-Туры - содержит информацию о доступных турах, их ценах и длительности.
-
-Услуги - содержит дополнительные услуги, которые могут быть предложены туристам.
-
-Заказы - связывает клиентов с турами, которые они заказали, и включает дату заказа.
-
-Специалисты - информация о специалистах, которые управляют турами.
-
-С помощью этого SQL-скрипта можно создать схему базы данных "Туризм" в MySQL. После выполнения этого скрипта у вас будет базовая структура, готовая к дальнейшему использованию, включая добавление данных и реализацию бизнес-логики.
